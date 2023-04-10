@@ -24,33 +24,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            TodoTheme(dynamicColor = false) {
-                HelloWorld()
-            }
-        }
-    }
-}
+            TodoTheme {
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HelloWorld(
-    viewModel: MainViewModel = hiltViewModel()
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        OutlinedTextField(
-            value = viewModel.num1,
-            onValueChange = { num -> viewModel.num1 = num})
-        Spacer(modifier = Modifier.height(10.dp))
-        OutlinedTextField(value = viewModel.num2, onValueChange ={ it -> viewModel.num2 = it})
-        Text(text = "${viewModel.answer}")
-        Button(
-            onClick = { viewModel.answer = viewModel.num1.toInt() + viewModel.num2.toInt() }
-        ) {
-            Text(text = "Add")
+            }
         }
     }
 }
