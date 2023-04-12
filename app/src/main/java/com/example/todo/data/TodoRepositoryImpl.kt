@@ -1,9 +1,8 @@
 package com.example.todo.data
 
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-class TodoRepositoryImpl @Inject constructor(
+class TodoRepositoryImpl constructor(
     private val todoDao: TodoDao
 ) : TodoRepository {
     override suspend fun insertTodo(todo: Todo) {
