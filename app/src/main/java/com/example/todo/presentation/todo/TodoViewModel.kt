@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo.data.Todo
 import com.example.todo.domain.repository.TodoRepository
+import com.example.todo.presentation.screens.Screens
 import com.example.todo.presentation.uiEvents.UiEvents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -39,10 +40,14 @@ class TodoViewModel @Inject constructor(
                 }
             }
             is TodoScreenEvents.OnTodoClicked -> {
-                _uiEvents.emit(UiEvents.OnNavigate("?todoId=${todoScreenEvents.todo.id}"))
+                viewModelScope.launch {
+                    _uiEvents.emit(UiEvents.OnNavigate(Screens.AddEditScreen.route + "?todoId=${todoScreenEvents.todo.id}"))
+                }
             }
             is TodoScreenEvents.OnCreateTodoClicked ->{
-
+                viewModelScope.launch {
+                    _uiEvents.emit(UiEvents.OnNavigate(Screens.AddEditScreen.route))
+                }
             }
             is TodoScreenEvents.OnUndoDeleteTodo ->{
                 deletedTodo?.let { todo ->

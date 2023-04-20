@@ -21,7 +21,6 @@ class AddEditViewModel @Inject constructor(
     private var description by mutableStateOf("")
     private var title by mutableStateOf("")
 
-
     init {
         val todoId = savedStateHandle.get<Int>("todoId")!!
         if (todoId != -1){
