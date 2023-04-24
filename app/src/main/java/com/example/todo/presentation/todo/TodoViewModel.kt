@@ -52,7 +52,7 @@ class TodoViewModel @Inject constructor(
     fun onSearch(){
         repository.getAllTodo().onEach {
             _state.value = _state.value.copy(isLoading = true)
-            _state.value = _state.value.copy(todos = it.filter { it.title == _searchQuery.value })
+            _state.value = _state.value.copy(todos = it.filter { it.title.contains(_searchQuery.value, ignoreCase = true)})
             _state.value = _state.value.copy(isLoading = false)
         }.launchIn(viewModelScope)
     }
