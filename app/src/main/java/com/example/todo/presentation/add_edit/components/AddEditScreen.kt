@@ -40,7 +40,7 @@ fun AddEditScreen(
     viewModel: AddEditViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val snackbarHostState = remember { SnackbarHostState() }
+
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collectLatest{ event ->
             when(event){
@@ -58,9 +58,6 @@ fun AddEditScreen(
     }
 
     Scaffold (
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {

@@ -90,10 +90,6 @@ class TodoViewModel @Inject constructor(
             is TodoScreenEvents.OnSearchChanged ->{
                 _searchQuery.value = todoScreenEvents.searchQuery
             }
-            is TodoScreenEvents.OnSearchClicked ->{
-
-            }
-
             is TodoScreenEvents.OnIsCompleteChange -> {
                 viewModelScope.launch {
                     repository.insertTodo(
