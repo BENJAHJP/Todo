@@ -3,7 +3,6 @@ package com.example.todo.presentation.todo.components
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -14,11 +13,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.todo.presentation.todo.TodoScreenEvents
@@ -32,11 +30,10 @@ import kotlinx.coroutines.flow.collectLatest
 fun TodoScreen(
     onNavigate: (UiEvents.OnNavigate) -> Unit,
     viewModel: TodoViewModel = hiltViewModel(),
-    snackbarHostState: SnackbarHostState
 ) {
 
     val todos = viewModel.todos.collectAsState(initial = emptyList())
-    
+    val snackbarHostState = remember { SnackbarHostState()}
     LaunchedEffect(key1 = true){
         viewModel.uiEvents.collectLatest { event ->
             when(event){
