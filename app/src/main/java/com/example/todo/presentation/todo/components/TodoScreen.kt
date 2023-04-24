@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -63,6 +64,11 @@ fun TodoScreen(
     Scaffold(
         topBar = {
             TextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                ,
+                placeholder = { Text(text = "search here ..")},
                 value = viewModel.searchQuery,
                 onValueChange = { viewModel.onEvent(TodoScreenEvents.OnSearchChanged(it))}
             )
@@ -76,8 +82,8 @@ fun TodoScreen(
             SnackbarHost(hostState = snackbarHostState)
         }
     ) {
-        Box(modifier = Modifier.fillMaxSize()){
-            LazyColumn(){
+        Box{
+            LazyColumn(modifier = Modifier.padding(top = it.calculateTopPadding())){
                 items(todos.value){ todo -> 
                     SingleTodo(
                         todo = todo,
