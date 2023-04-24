@@ -14,8 +14,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.toCollection
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,6 +27,7 @@ class TodoViewModel @Inject constructor(
     private val repository: TodoRepository
 ): ViewModel(){
     var todos = repository.getAllTodo()
+
     private var deletedTodo: Todo? = null
 
     private val _searchQuery = mutableStateOf("")
@@ -32,14 +36,12 @@ class TodoViewModel @Inject constructor(
     private val _uiEvents = MutableSharedFlow<UiEvents>()
     val uiEvents: MutableSharedFlow<UiEvents> = _uiEvents
 
-    private var searchJob: Job? = null
     fun onSearch(query: String){
         _searchQuery.value = query
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
-            delay(500L)
-            todos = todos.map { todos ->
-                todos.filter { todo ->
+
+        viewModelScope.launch {
+            todos = todos.map { item ->
+                item.filter { todo ->
                     todo.title == _searchQuery.value
                 }
             }
