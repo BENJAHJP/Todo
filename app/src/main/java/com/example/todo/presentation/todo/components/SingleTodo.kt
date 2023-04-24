@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,7 +48,7 @@ fun SingleTodo(
                 tint = Color.White
             )
         },
-        background = Color.Blue
+        background = MaterialTheme.colorScheme.primary
     )
 
     SwipeableActionsBox(
@@ -56,29 +57,31 @@ fun SingleTodo(
         endActions = listOf(delete),
         backgroundUntilSwipeThreshold = Color.White
     ) {
-        Row (
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
-        ){
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+        Surface {
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier
+            ){
+                Column(
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Text(
-                        text = todo.title,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = todo.title,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
+                Checkbox(
+                    checked = todo.isComplete,
+                    onCheckedChange = { isChecked ->
+                        onEvent(TodoScreenEvents.OnIsCompleteChange(todo, isChecked))
+                    }
+                )
             }
-            Checkbox(
-                checked = todo.isComplete,
-                onCheckedChange = { isChecked ->
-                    onEvent(TodoScreenEvents.OnIsCompleteChange(todo, isChecked))
-                }
-            )
         }
     }
 }

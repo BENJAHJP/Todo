@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -60,6 +61,12 @@ fun TodoScreen(
     }
     
     Scaffold(
+        topBar = {
+            TextField(
+                value = viewModel.searchQuery,
+                onValueChange = { viewModel.onEvent(TodoScreenEvents.OnSearchChanged(it))}
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = { viewModel.onEvent(TodoScreenEvents.OnCreateTodoClicked) }) {
                 Icon(imageVector = Icons.Rounded.Add, contentDescription = "add")
@@ -76,7 +83,8 @@ fun TodoScreen(
                         todo = todo,
                         viewModel = viewModel,
                         onEvent = viewModel::onEvent,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .clickable {
                                 viewModel.onEvent(TodoScreenEvents.OnTodoClicked(todo))
                             }
