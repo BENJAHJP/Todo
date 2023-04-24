@@ -1,5 +1,6 @@
 package com.example.todo.presentation.todo
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toCollection
@@ -26,9 +28,10 @@ import javax.inject.Inject
 class TodoViewModel @Inject constructor(
     private val repository: TodoRepository
 ): ViewModel(){
-    var todos = repository.getAllTodo()
-
     private var deletedTodo: Todo? = null
+
+    private val _state = mutableStateOf(TodoScreenState())
+    val state: State<TodoScreenState> = _state
 
     private val _searchQuery = mutableStateOf("")
     val searchQuery: State<String> = _searchQuery
@@ -36,16 +39,22 @@ class TodoViewModel @Inject constructor(
     private val _uiEvents = MutableSharedFlow<UiEvents>()
     val uiEvents: MutableSharedFlow<UiEvents> = _uiEvents
 
-    fun onSearch(query: String){
-        _searchQuery.value = query
-
-        viewModelScope.launch {
-            todos = todos.map { item ->
-                item.filter { todo ->
-                    todo.title == _searchQuery.value
-                }
-            }
-        }
+    init {
+        getTodos()
+    }
+    private fun getTodos(){
+        repository.getAllTodo().onEach {
+            _state.value = TodoScreenState(isLoading = true)
+            _state.value = TodoScreenState(todos = it)
+            _state.value = TodoScreenState(isLoading = false)
+        }.launchIn(viewModelScope)
+    }
+    fun onSearch(){
+        repository.getAllTodo().onEach {
+            _state.value = TodoScreenState(isLoading = true)
+            _state.value = TodoScreenState(todos = it.filter { it.title == _searchQuery.value })
+            _state.value = TodoScreenState(isLoading = false)
+        }.launchIn(viewModelScope)
     }
     fun onEvent(todoScreenEvents: TodoScreenEvents){
         when(todoScreenEvents){
