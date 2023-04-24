@@ -8,7 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo.data.Todo
 import com.example.todo.domain.repository.TodoRepository
+import com.example.todo.presentation.uiEvents.UiEvents
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,8 +20,11 @@ class AddEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ): ViewModel(){
     private var todo by mutableStateOf<Todo?>(null)
-    private var description by mutableStateOf("")
-    private var title by mutableStateOf("")
+    var description by mutableStateOf("")
+    var title by mutableStateOf("")
+
+    private val _uiEvent = MutableSharedFlow<UiEvents>()
+    val uiEvent: MutableSharedFlow<UiEvents> = _uiEvent
 
     init {
         val todoId = savedStateHandle.get<Int>("todoId")!!
@@ -48,6 +53,8 @@ class AddEditViewModel @Inject constructor(
                             id = todo?.id
                         )
                     )
+                    _uiEvent.emit(UiEvents.OnShowToast("todo added"))
+                    _uiEvent.emit(UiEvents.OnPopBackStack)
                 }
             }
             is AddEditScreenEvents.OnTitleChanged -> {
