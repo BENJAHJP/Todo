@@ -23,7 +23,7 @@ import javax.inject.Inject
 class TodoViewModel @Inject constructor(
     private val repository: TodoRepository
 ): ViewModel(){
-    val todos = repository.getAllTodo()
+    var todos = repository.getAllTodo()
     private var deletedTodo: Todo? = null
 
     private val _searchQuery = mutableStateOf("")
@@ -38,7 +38,7 @@ class TodoViewModel @Inject constructor(
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(500L)
-            todos.map { todos ->
+            todos = todos.map { todos ->
                 todos.filter { todo ->
                     todo.title == _searchQuery.value
                 }
