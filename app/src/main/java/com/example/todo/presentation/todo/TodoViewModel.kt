@@ -1,5 +1,6 @@
 package com.example.todo.presentation.todo
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,7 +11,11 @@ import com.example.todo.domain.repository.TodoRepository
 import com.example.todo.presentation.screens.Screens
 import com.example.todo.presentation.uiEvents.UiEvents
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,11 +25,26 @@ class TodoViewModel @Inject constructor(
 ): ViewModel(){
     val todos = repository.getAllTodo()
     private var deletedTodo: Todo? = null
-    var searchQuery by mutableStateOf("")
+
+    private val _searchQuery = mutableStateOf("")
+    val searchQuery: State<String> = _searchQuery
 
     private val _uiEvents = MutableSharedFlow<UiEvents>()
     val uiEvents: MutableSharedFlow<UiEvents> = _uiEvents
 
+    private var searchJob: Job? = null
+    fun onSearch(query: String){
+        _searchQuery.value = query
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(500L)
+            todos.map { todos ->
+                todos.filter { todo ->
+                    todo.title == _searchQuery.value
+                }
+            }
+        }
+    }
     fun onEvent(todoScreenEvents: TodoScreenEvents){
         when(todoScreenEvents){
             is TodoScreenEvents.OnDeleteTodo -> {
@@ -57,7 +77,7 @@ class TodoViewModel @Inject constructor(
                 }
             }
             is TodoScreenEvents.OnSearchChanged ->{
-                searchQuery = todoScreenEvents.searchQuery
+                _searchQuery.value = todoScreenEvents.searchQuery
             }
             is TodoScreenEvents.OnSearchClicked ->{
 

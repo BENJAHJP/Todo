@@ -69,8 +69,8 @@ fun TodoScreen(
                     .padding(16.dp)
                 ,
                 placeholder = { Text(text = "search here ..")},
-                value = viewModel.searchQuery,
-                onValueChange = { viewModel.onEvent(TodoScreenEvents.OnSearchChanged(it))}
+                value = viewModel.searchQuery.value,
+                onValueChange = viewModel::onSearch
             )
         },
         floatingActionButton = {
