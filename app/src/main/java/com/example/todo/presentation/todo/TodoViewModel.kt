@@ -44,9 +44,9 @@ class TodoViewModel @Inject constructor(
     }
     private fun getTodos(){
         repository.getAllTodo().onEach {
-            _state.value = TodoScreenState(isLoading = true)
-            _state.value = TodoScreenState(todos = it)
-            _state.value = TodoScreenState(isLoading = false)
+            _state.value = _state.value.copy(isLoading = true)
+            _state.value = _state.value.copy(todos = it)
+            _state.value = _state.value.copy(isLoading = false)
         }.launchIn(viewModelScope)
     }
     fun onSearch(){
