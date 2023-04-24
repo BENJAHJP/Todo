@@ -56,37 +56,29 @@ fun SingleTodo(
         endActions = listOf(delete),
         backgroundUntilSwipeThreshold = Color.White
     ) {
-        Surface(
-            modifier = Modifier.clip(RoundedCornerShape(10.dp))
-        ) {
-            Row (
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = modifier
-            ){
-                Column(
-                    modifier = Modifier.weight(1f)
+        Row (
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+        ){
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            text = todo.title,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    todo.description?.let {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = it)
-                    }
+                    Text(
+                        text = todo.title,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-                Checkbox(
-                    checked = todo.isComplete,
-                    onCheckedChange = { isChecked ->
-                        onEvent(TodoScreenEvents.OnIsCompleteChange(todo, isChecked))
-                    }
-                )
             }
+            Checkbox(
+                checked = todo.isComplete,
+                onCheckedChange = { isChecked ->
+                    onEvent(TodoScreenEvents.OnIsCompleteChange(todo, isChecked))
+                }
+            )
         }
     }
 }
