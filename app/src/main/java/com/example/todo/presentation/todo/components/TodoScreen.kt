@@ -108,20 +108,21 @@ fun TodoScreen(
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )
-            }
-            LazyColumn(modifier = Modifier.padding(top = it.calculateTopPadding())){
-                items(state.todos){ todo ->
-                    SingleTodo(
-                        todo = todo,
-                        viewModel = viewModel,
-                        onEvent = viewModel::onEvent,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                viewModel.onEvent(TodoScreenEvents.OnTodoClicked(todo))
-                            }
-                            .padding(16.dp)
-                    )
+            } else {
+                LazyColumn(modifier = Modifier.padding(top = it.calculateTopPadding())){
+                    items(state.todos){ todo ->
+                        SingleTodo(
+                            todo = todo,
+                            viewModel = viewModel,
+                            onEvent = viewModel::onEvent,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    viewModel.onEvent(TodoScreenEvents.OnTodoClicked(todo))
+                                }
+                                .padding(16.dp)
+                        )
+                    }
                 }
             }
         }
