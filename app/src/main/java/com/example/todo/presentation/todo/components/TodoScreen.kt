@@ -81,7 +81,10 @@ fun TodoScreen(
                             Icon(imageVector = Icons.Rounded.Search, contentDescription = "search")
                         }
                         if (viewModel.searchQuery.value.isNotBlank()){
-                            IconButton(onClick = { viewModel.onEvent(TodoScreenEvents.OnSearchChanged("")) }) {
+                            IconButton(onClick = {
+                                viewModel.onEvent(TodoScreenEvents.OnSearchChanged(""))
+                                viewModel.getTodos()
+                            }) {
                                 Icon(imageVector = Icons.Rounded.Clear, contentDescription = "clear")
                             }
                         }

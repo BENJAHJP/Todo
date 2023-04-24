@@ -42,7 +42,7 @@ class TodoViewModel @Inject constructor(
     init {
         getTodos()
     }
-    private fun getTodos(){
+    fun getTodos(){
         repository.getAllTodo().onEach {
             _state.value = _state.value.copy(isLoading = true)
             _state.value = _state.value.copy(todos = it)
